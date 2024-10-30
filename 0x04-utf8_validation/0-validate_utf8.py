@@ -1,41 +1,37 @@
 #!/usr/bin/python3
-"""
-UTF-8 Validation
-"""
+""" UTF-8 validation """
 
 
 def validUTF8(data):
-    """
-    Determines if a given data set represents a valid UTF-8 encoding.
-    
-    Args:
-        data (list): A list of integers representing bytes of data.
-
-    Returns:
-        bool: True if data is a valid UTF-8 encoding, else False.
-    """
-    num_bytes = 0
-
-    for byte in data:
-        # Only keep the 8 least significant bits
-        byte = byte & 0xFF
-        
-        if num_bytes == 0:
-            # Determine the number of bytes in the UTF-8 character
-            if (byte >> 5) == 0b110:
-                num_bytes = 1
-            elif (byte >> 4) == 0b1110:
-                num_bytes = 2
-            elif (byte >> 3) == 0b11110:
-                num_bytes = 3
-            elif (byte >> 7) == 0b0:
-                continue
-            else:
-                return False
+    """ main function """
+    flag = False
+    jump_list = {30: 3, 14: 4, 6: 5}
+    char_length = {3: 3, 4: 2, 5: 1}
+    list_length = 0
+    if (len(data) == 0) or (len(data) == 1 and data[0] >> 7 == 0):
+        return True
+    for num in data:
+        if list_length:
+            list_length -= 1
         else:
-            # Check that the following bytes start with 10
-            if (byte >> 6) != 0b10:
+            flag = False
+        if len(bin(num)[2:]) == 9:
+            num = int(bin(num)[3:], 2)
+        if num >> 7 != 0 and len(bin(num)[2:]) >= 8:
+            if (not flag and num >> 6 == 2):
                 return False
-            num_bytes -= 1
-
-    return num_bytes == 0
+            elif (flag and num >> 6 != 2):
+                return False
+            for test_point, shift in jump_list.items():
+                if num >> shift == test_point:
+                    list_length = char_length[shift]
+                    break
+            if not (list_length or flag):
+                return False
+            else:
+                flag = True
+        elif num >> 7 == 0 and flag:
+            return False
+    if list_length:
+        return False
+    return True
