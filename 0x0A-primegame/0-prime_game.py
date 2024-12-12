@@ -1,13 +1,18 @@
 #!/usr/bin/python3
 """
-module that house a function
+This is a module that houses a function.
 """
+
 
 def island_perimeter(grid):
     """
-    function to calculate and return the perimeter of an island
+    Function to calculate and return the perimeter of an island.
+
     Args:
-      grid: 2D array that represent the island
+        grid: 2D array that represents the island.
+
+    Returns:
+        The perimeter of the island.
     """
     rows, cols = len(grid), len(grid[0])
     perimeter = 0
@@ -19,13 +24,13 @@ def island_perimeter(grid):
                 perimeter += 4
 
                 # Check for neighboring land cells to subtract shared edges
-                if r > 0 and grid[r-1][c] == 1:  # Top neighbor
+                if r > 0 and grid[r - 1][c] == 1:  # Top neighbor
                     perimeter -= 1
-                if r < rows - 1 and grid[r+1][c] == 1:  # Bottom neighbor
+                if r < rows - 1 and grid[r + 1][c] == 1:  # Bottom neighbor
                     perimeter -= 1
-                if c > 0 and grid[r][c-1] == 1:  # Left neighbor
+                if c > 0 and grid[r][c - 1] == 1:  # Left neighbor
                     perimeter -= 1
-                if c < cols - 1 and grid[r][c+1] == 1:  # Right neighbor
+                if c < cols - 1 and grid[r][c + 1] == 1:  # Right neighbor
                     perimeter -= 1
 
     return perimeter
